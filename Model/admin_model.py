@@ -1,22 +1,17 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, validator
 from bson import ObjectId
 from typing import Optional
 
-class ObjectIdStr(str):
-    @classmethod
-    def __get_validators__(cls):
-        yield cls.validate
-
-    @classmethod
-    def validate(cls, value):
-        if not ObjectId.is_valid(value):
-            raise ValueError('Invalid ObjectId')
-        return ObjectId(value)
-
 class Admin(BaseModel):
-    id: ObjectIdStr = Field(..., alias='_id')
+    id: str = Field(..., alias='_id', description='The ID of the admin.')
     a_name: str
     a_email: str
     a_mobile: str
     a_password: str
     a_profile_image: Optional[str] = None
+
+    @validator("id")
+    def validate_id(cls, value):
+        if not ObjectId.is_valid(str(value)):
+            raise ValueError('Invalid ObjectId')
+        return str(value)
