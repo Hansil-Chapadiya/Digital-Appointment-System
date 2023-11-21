@@ -4,3 +4,4 @@ pydantic>=1.10.0,<2.0.0
 bson
 motor
 jwt
+PyJWT
